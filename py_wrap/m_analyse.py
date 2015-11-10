@@ -31,7 +31,7 @@ def read(d):
 
 
 	data_transpose= numpy.transpose(data_bunch)
-	pos, den, vel, pre = [], [], [], []
+	pos, den, vel, pre, tem = [], [], [], [], []
 	steps = 0
 	for e in data_bunch:
 		steps = steps + 1
@@ -39,11 +39,12 @@ def read(d):
 		den = den + [e[:,1]]
 		vel = vel + [e[:,2]]
 		pre = pre + [e[:,3]]
+		tem = tem + [e[:,4]]
 	
 	size = len(e[:,0])
 	sizes = [steps, size]
 
-	return path, sizes, pos, den, vel, pre
+	return path, sizes, pos, den, vel, pre, tem
 
 
 def plott_one(arr, sizes, name, path):
@@ -51,9 +52,9 @@ def plott_one(arr, sizes, name, path):
 	prename = path+"/"+name
 	steps, size = sizes
 
-	fs = [20,20]
+	fs = [10,10]
 	pyplot.figure(figsize = (fs[0],fs[1]))
-	pyplot.matshow(arr, extent=[0,size,steps,0], aspect='auto')
+	pyplot.matshow(arr, extent=[0,size,0,steps], aspect='auto')
 	pyplot.hot()
 	pyplot.xlabel("position [c.u.]")
 	pyplot.ylabel("time [c.u.]")
@@ -69,9 +70,9 @@ def plott_one(arr, sizes, name, path):
 	pyplot.cla()
 	pyplot.clf()
 
-	fs = [20,20]
+	fs = [10,10]
 	pyplot.figure(figsize = (fs[0],fs[1]))
-	pyplot.imshow(arr, extent=[0,size,steps,0], aspect='auto')
+	pyplot.imshow(arr, extent=[0,size,0,steps], aspect='auto')
 	pyplot.hot()
 
 	pyplot.xlabel("position [c.u.]")
@@ -92,15 +93,23 @@ def remove_spaces(string):
 	return ns
 
 
+def reverse(arr):
+	narr = []
+	for e in arr[::-1]:
+		narr = narr + [e]
+	return narr
+
+
 def plott_all(d):
-	path, sizes,  pos, den, vel, pre = read(d)
+	path, sizes,  pos, den, vel, pre, tem = read(d)
 	nd = {}
-	nd['pressure'] = pre
-	nd['density']  = den
-	nd['velocity'] = vel
+	nd['pressure'] = reverse(pre)
+	nd['density']  = reverse(den)
+	nd['velocity'] = reverse(vel)
+	nd['temperature'] = reverse(tem)
 
 	for key in d:
-		if key in ['pressure', 'density', 'velocity']:
+		if key in ['pressure', 'density', 'velocity', 'temperature']:
 			if remove_spaces(d[key]) == 'yes':
 				print key, 'done'
 				plott_one(nd[key], sizes, key, path) 

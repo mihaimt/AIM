@@ -10,8 +10,8 @@ import m_analyse
 script, input = argv
 
 d = read_parameter(input)
-
-execute_it(d)
+if m_analyse.remove_spaces(d['execute']) == 'yes':
+	execute_it(d)
 
 m_analyse.plott_all(d)
 
