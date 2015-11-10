@@ -1,0 +1,56 @@
+grid
+{
+   read_from_file   no 
+   //file_name      mesh.dat
+   x_min   -0.25
+   x_max   0.0
+   n_cell  100
+}
+
+numeric
+{
+   time_scheme  ssprk3
+   cfl          0.1
+   max_iter     50000
+   final_time   1
+   min_residue  1.0e-6
+   reconstruct  first  
+   bc_type      neumann
+}
+
+material
+{
+   gamma       1.6
+   gas_const   0.5
+   viscosity
+   {
+      model    constant 
+      mu_ref   5e-4
+   }
+   prandtl     0.72
+   model       ns
+   flux        roe
+}
+
+constants
+{
+   dl    1.0
+   ul    1.0
+   xmid  -0.125
+   GAMMA 1.6
+   M2    2.25
+}
+
+initial_condition
+{
+   read_from_file   no
+   //file_name    ****
+   density          dl*(x<xmid) + dl*(GAMMA+1.0)*M2/(2.0+(GAMMA-1.0)*M2)*(x>xmid)
+   velocity         ul*(x<xmid) + ul*((GAMMA-1.0)/(GAMMA+1.0)+2.0/(GAMMA+1.0)/M2)*(x>xmid)
+   pressure         (1.0/GAMMA/M2)*(x<xmid) + (1.0/GAMMA/M2)*(2.0*GAMMA/(GAMMA+1.0)*M2-(GAMMA-1)/(GAMMA+1.0))*(x>xmid)
+}
+
+output
+{
+   frequency 1000
+}
