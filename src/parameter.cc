@@ -370,6 +370,9 @@ void Parameter::read_output (Reader &fin)
    fin.entry ("frequency");
    fin >> write_frequency;
    assert (write_frequency > 0);
+   
+   fin.entry ("output_path");
+   fin >> OUTPUT_PATH;
 
    fin.end_section ();
 }

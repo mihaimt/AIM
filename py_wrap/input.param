@@ -1,11 +1,11 @@
 #!!! DO NOT USE TABS
 
 solver_dir        = ../src
-solver_call       = run -i param.in
-solver_input      = ../test/test1/param.in
+solver_call       = aim_run -i param.in
+solver_input      = ../test/test2/param.in
 
 #output_files
-output_path       = ../test/data/
+output_path       = ../test/test2/
 output_e_pref     = glob
 output_s_pref     = sol
 

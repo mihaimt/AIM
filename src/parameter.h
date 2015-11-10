@@ -46,6 +46,7 @@ class Parameter
       TimeIntegrationScheme time_scheme;
       InitialCondition initial_condition;
       Sources sources;
+      std::string OUTPUT_PATH;
 
       unsigned int write_frequency;
       void read ();

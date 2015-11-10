@@ -563,6 +563,7 @@ void FV::output ()
    ss <<precount<<counter;
    filename += ss.str();
    filename +=extension;
+   filename = param.OUTPUT_PATH + "/" + filename;
     
    cout<<"Saving solutions in "<< filename<<endl;   
  

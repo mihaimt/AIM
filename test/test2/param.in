@@ -15,7 +15,7 @@ numeric
    final_time   1
    min_residue  1.0e-6
    reconstruct  first  
-   bc_type      neumann
+   bc_type      wall
 }
 
 material
@@ -60,4 +60,5 @@ source
 output
 {
    frequency 100
+   output_path  ../test/test2
 }
