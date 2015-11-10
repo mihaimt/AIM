@@ -1,0 +1,63 @@
+grid
+{
+   read_from_file   no 
+   //file_name      mesh.dat
+   x_min   0
+   x_max   5.0
+   n_cell  500
+}
+
+numeric
+{
+   time_scheme  ssprk3
+   cfl          0.5
+   max_iter     50000
+   final_time   1
+   min_residue  1.0e-6
+   reconstruct  first  
+   bc_type      neumann
+}
+
+material
+{
+   gamma       1.4
+   gas_const   8.3145
+   viscosity
+   {
+      model    mu_arc 
+   }
+   prandtl     0.1014
+   model       ns
+   flux        roe
+}
+
+constants
+{
+   d        5.807
+   p        5e5
+   u        0
+   arc_l    0.1
+   arc_den  10
+   arc_eng  1e5
+   arc_pos  2
+}
+
+initial_condition
+{
+   read_from_file   no
+   //file_name    ****
+   density          d
+   velocity         u   
+   pressure         p
+}
+
+source
+{
+   mass_source     arc_den*((x>(arc_pos - 0.5*arc_l)) & (x<(arc_pos + 0.5*arc_l)))
+   energy_source   arc_eng*((x>(arc_pos - 0.5*arc_l)) & (x<(arc_pos + 0.5*arc_l)))
+}
+
+output
+{
+   frequency 100
+}
