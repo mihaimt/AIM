@@ -518,7 +518,7 @@ void FV::compute_residual ()
    reconstruct (n_face-1, left, right);
    num_flux (n_face-1, left, right,tau_f[n_face-1], q_f[n_face-1], flux);
    for(unsigned int j=0; j<NVAR; ++j)
-       residual[n_cell-1][j] += flux[j];
+       residual[n_cell-1][j] += flux[j];   
     
 }
 
@@ -619,6 +619,8 @@ void FV::run ()
       {
          compute_face_derivatives ();
          compute_residual ();
+         poiseulle_cor(); 
+         source_terms(time);
          update_solution (rk);
          con_to_prim ();
       }
@@ -657,10 +659,29 @@ double FV::enthalpy(const vector<double>& prim) const
 }
 
 // ------------------------------------------------------------------------------
-// viscosity coefficient as functon of temperature
+// Hagen-Poiseulle correction
 // ------------------------------------------------------------------------------
-// double FV::viscosity (const double T) const
-// {
-//    double mu = param.mu_ref * pow( T / param.T_ref, 0.8);
-//    return mu;
-// }
+void FV::poiseulle_cor()
+{
+   for(unsigned int i=0; i<n_cell; ++i)
+   {
+     double T = temperature(primitive[ng_cell +i]);
+     double mu  = param.viscosity (T);
+     residual[i][1] += dx[i] * 8*mu*M_PI*primitive[ng_cell +i][1];
+   }  
+}
+
+// ------------------------------------------------------------------------------
+// Hagen-Poiseulle correction
+// ------------------------------------------------------------------------------
+void FV::source_terms(const double time)
+{
+   for(unsigned int i=0; i<n_cell; ++i)
+   {
+     vector<double> source_val;
+     source_val.resize(2);
+     param.sources.value (xc[i],time,source_val);
+     residual[i][0] += dx[i] * source_val[0];
+     residual[i][2] += dx[i] * source_val[1];
+   }  
+}

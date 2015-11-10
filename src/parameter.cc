@@ -23,6 +23,7 @@ void Parameter::read ()
    read_material (fin);
    read_constants (fin);
    read_initial_condition (fin);
+   read_source (fin);
    read_output (fin);
 }
 
@@ -330,6 +331,28 @@ void Parameter::read_initial_condition (Reader &fin)
       cout << "   Allowed values: yes, no"<<endl;
       exit (0);
    }
+   
+   fin.end_section ();
+}
+
+//------------------------------------------------------------------------------
+// Read sources
+//------------------------------------------------------------------------------
+void Parameter::read_source (Reader &fin)
+{
+   cout << "  Reading source section\n";
+
+   string input;
+
+   fin.begin_section ("source");
+      
+   fin.entry("mass_source");
+   fin.getline (input);
+   sources.add ("mass_source", input);
+
+   fin.entry("energy_source");
+   fin.getline (input);
+   sources.add ("energy_source", input);
    
    fin.end_section ();
 }

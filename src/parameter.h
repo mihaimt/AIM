@@ -8,6 +8,7 @@
 #include "reader.h"
 #include "ext_constants.h"
 #include "ic.h"
+#include "sources.h"
 
 class Parameter
 {
@@ -15,8 +16,9 @@ class Parameter
       char* input_file;
       std::string mesh_file;
       std::string ic_file;
+      std::string source_file;
       
-      bool mesh_file_read, ic_file_read;
+      bool mesh_file_read, ic_file_read, source_file_read;
 
       unsigned int n_rks;
       unsigned int max_iter;
@@ -43,6 +45,7 @@ class Parameter
       ReconstructionScheme reconstruct_scheme;
       TimeIntegrationScheme time_scheme;
       InitialCondition initial_condition;
+      Sources sources;
 
       unsigned int write_frequency;
       void read ();
@@ -50,6 +53,7 @@ class Parameter
 
    private:
       void read_grid (Reader&);
+      void read_source (Reader&);
       void read_constants (Reader&);
       void read_numeric (Reader&);
       void read_material (Reader&);

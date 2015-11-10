@@ -47,7 +47,6 @@ void InitialCondition::add (std::string variable, std::string fun)
 inline
 void InitialCondition::value (const double& p, std::vector<double>& prim)
 {
-   prim.resize(NVAR);
 
    double t = 0.0;
    double vals[] = {p, t};

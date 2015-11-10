@@ -57,6 +57,8 @@ class FV
       double temperature(const std::vector<double>& prim) const;
       double enthalpy(const std::vector<double>& prim) const;
       //double viscosity (const double T) const;
+      void poiseulle_cor();
+      void source_terms(const double time);
     
       double dt;
       std::vector<double> xc;
