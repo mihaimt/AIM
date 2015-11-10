@@ -75,6 +75,8 @@ class FV
       std::vector<double> tau_f,  q_f;
       double tau,q;
       
+      std::vector<double> total_energy;
+      
       unsigned int ng_cell, n_cell, n_face;
       unsigned int counter;
       

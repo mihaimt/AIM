@@ -683,7 +683,7 @@ void FV::source_terms(const double time)
      vector<double> source_val;
      source_val.resize(2);
      param.sources.value (xc[i],time,source_val);
-     residual[i][0] += dx[i] * source_val[0];
-     residual[i][2] += dx[i] * source_val[1];
+     residual[i][0] -= dx[i] * source_val[0];
+     residual[i][2] -= dx[i] * source_val[1];
    }  
 }
