@@ -573,7 +573,8 @@ void FV::output ()
       fo << xc[i] << " " 
          << primitive[i+ng_cell][0] << " " 
          << primitive[i+ng_cell][1] << " "
-         << primitive[i+ng_cell][2] << endl;
+         << primitive[i+ng_cell][2] << " "
+         << temperature(primitive[i+ng_cell]) << endl;
       
    }
    fo.close ();
