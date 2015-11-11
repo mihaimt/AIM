@@ -12,7 +12,7 @@ numeric
    time_scheme  ssprk3
    cfl          0.1
    max_iter     50000000
-   final_time   4.0e-3
+   final_time   5.0e-2
    min_residue  1.0e-6
    reconstruct  first  
    bc_type      wall
