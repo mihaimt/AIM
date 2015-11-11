@@ -1,7 +1,6 @@
 grid
 {
    read_from_file   no 
-   //file_name      mesh.dat
    x_min            0
    x_max            5.0
    n_cell           500
@@ -13,15 +12,7 @@ numeric
    time_scheme  ssprk3
    cfl          0.5
    max_iter     50000000
-<<<<<<< Updated upstream
-   final_time   5.0e-2
-=======
-<<<<<<< HEAD
-   final_time   1
-=======
-   final_time   5.0e-2
->>>>>>> origin/master
->>>>>>> Stashed changes
+   final_time   2e-3
    min_residue  1.0e-6
    reconstruct  first  
    bc_type      wall
@@ -80,5 +71,5 @@ poiseuille
 output
 {
    output_dt    1e-3
-   output_path  ../test/test2
+   output_path  .
 }
