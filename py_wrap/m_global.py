@@ -5,7 +5,7 @@ import m_analyse
 def plot_energy(d):
 	path = d['output_path']
 	efile= d['output_e']
-	file_name = m_analyse.reove_spaces(path+efile)
+	file_name = m_analyse.remove_spaces(path+efile)
 	out_name  = m_analyse.remove_spaces(path+"total_energy_cons.pdf")
 
 	if m_analyse.remove_spaces(d['energy']) == 'yes': 

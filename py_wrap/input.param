@@ -1,5 +1,6 @@
 #!!! DO NOT USE TABS
 execute = no
+var_param = no
 
 solver_dir        = ../src
 solver_call       = aim_run -i param.in
