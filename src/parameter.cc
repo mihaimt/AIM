@@ -266,7 +266,7 @@ void Parameter::read_material (Reader &fin)
       flux_scheme = roe;  
    else if(input == "roe_fixed")
       flux_scheme = roe_fixed;   
-   else if(input == "rusonav")
+   else if(input == "rusanov")
       flux_scheme = rusanov;
    else   
    {

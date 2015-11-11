@@ -12,7 +12,7 @@ numeric
    time_scheme  ssprk3
    cfl          0.5
    max_iter     50000000
-   final_time   2e-3
+   final_time   2e-1
    min_residue  1.0e-6
    reconstruct  first  
    bc_type      wall
@@ -32,7 +32,7 @@ material
    }
    prandtl     0.73
    model       ns
-   flux        roe
+   flux        roe_fixed
 }
 
 constants
@@ -71,5 +71,5 @@ poiseuille
 output
 {
    output_dt    1e-3
-   output_path  .
+   output_path  ../test/test2
 }
