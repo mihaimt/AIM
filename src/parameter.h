@@ -48,7 +48,7 @@ class Parameter
       Sources sources;
       std::string OUTPUT_PATH;
 
-      unsigned int write_frequency;
+      double output_dt;
       void read ();
       double viscosity (const double T) const;
 

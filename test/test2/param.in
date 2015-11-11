@@ -11,8 +11,8 @@ numeric
 {
    time_scheme  ssprk3
    cfl          0.1
-   max_iter     5000
-   final_time   1
+   max_iter     50000000
+   final_time   4.0e-3
    min_residue  1.0e-6
    reconstruct  first  
    bc_type      wall
@@ -26,7 +26,7 @@ material
    {
       model    mu_arc 
    }
-   prandtl     0.1014
+   prandtl     0.73
    model       ns
    flux        roe
 }
@@ -38,7 +38,7 @@ constants
    u        0
    arc_l    0.1
    arc_den  10
-   arc_eng  1e5
+   arc_eng  3e8
    arc_pos  2
 }
 
@@ -59,6 +59,6 @@ source
 
 output
 {
-   frequency 10
+   output_dt    1e-4
    output_path  ../test/test2
 }

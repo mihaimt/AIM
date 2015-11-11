@@ -611,12 +611,17 @@ void FV::run ()
    counter = 0;
    output();
    double time = 0.0;
+   unsigned int t_size = 1;
+   time_array.push_back(time);
+   double next_output_time = min(time_array[t_size-1] + param.output_dt,param.final_time);
+   find_globals();
    unsigned int iter = 0;
    while (time < param.final_time && iter < param.max_iter)
    {
       conserved_old = conserved;
-      compute_dt ();
-      if(time+dt > param.final_time) dt = param.final_time - time;
+      compute_dt();
+      
+      if(time+dt > next_output_time) dt = next_output_time - time;
       for(unsigned int rk=0; rk<param.n_rks; ++rk)
       {
          compute_face_derivatives ();
@@ -626,19 +631,22 @@ void FV::run ()
          update_solution (rk);
          con_to_prim ();
       }
-      time += dt;
+      time+= dt;
       ++iter;
       compute_residual_norm();
-
-      if(iter % param.write_frequency == 0 || time == param.final_time)
+      if(time == next_output_time)
       {
+         time_array.push_back(time);
          cout << "Iter = " << iter << " Time = " << time << endl;
          cout << "Residual norm = ";
          cout << res_norm[0] << " " << res_norm[1] << " " << res_norm[2] << endl;
-         
          output ();
+         find_globals();
+         t_size = time_array.size();
+         next_output_time = min(time_array[t_size-1] + param.output_dt,param.final_time);
       }
    }
+   save_globals();
    
 
 }
@@ -686,4 +694,37 @@ void FV::source_terms(const double time)
      residual[i][0] -= dx[i] * source_val[0];
      residual[i][2] -= dx[i] * source_val[1];
    }  
+}
+
+// ------------------------------------------------------------------------------
+// Find global quantities
+// ------------------------------------------------------------------------------
+void FV::find_globals()
+{
+   double val = 0;
+   for(unsigned int i=0; i<n_cell; ++i)
+     val += dx[i]*conserved[i][2];
+   total_energy.push_back(val);    
+}
+
+//------------------------------------------------------------------------------
+// Save global quantities to file
+//------------------------------------------------------------------------------
+void FV::save_globals()
+{
+   string filename = "glob.dat";
+   filename = param.OUTPUT_PATH + "/" + filename;
+    
+   cout<<"Saving solutions in "<< filename<<endl;   
+ 
+   ofstream fo(filename.c_str());
+   unsigned int t_size = time_array.size();
+   
+   for(unsigned int i=0; i<t_size; ++i)
+   {
+      fo << time_array[i] << " " 
+         << total_energy[i] << endl;
+      
+   }
+   fo.close ();
 }

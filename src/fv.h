@@ -59,6 +59,8 @@ class FV
       //double viscosity (const double T) const;
       void poiseulle_cor();
       void source_terms(const double time);
+      void find_globals();
+      void save_globals();
     
       double dt;
       std::vector<double> xc;
@@ -76,6 +78,7 @@ class FV
       double tau,q;
       
       std::vector<double> total_energy;
+      std::vector<double> time_array;
       
       unsigned int ng_cell, n_cell, n_face;
       unsigned int counter;
