@@ -8,7 +8,7 @@ def plot_energy(d):
 	file_name = m_analyse.remove_spaces(path+efile)
 	out_name  = m_analyse.remove_spaces(path+"total_energy_cons.pdf")
 
-	if m_analyse.remove_spaces(d['energy']) == 'yes': 
+	if m_analyse.remove_spaces(d['energy_total']) == 'yes': 
 		data = numpy.genfromtxt(file_name, delimiter = ' ', skip_footer = 0)
 		tdata = numpy.transpose(data)
 		time =  tdata[0]
