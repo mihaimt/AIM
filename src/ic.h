@@ -47,7 +47,6 @@ void InitialCondition::add (std::string variable, std::string fun)
 inline
 void InitialCondition::value (const double& p, std::vector<double>& prim)
 {
-
    double t = 0.0;
    double vals[] = {p, t};
    prim[0]     = density.Eval (vals);

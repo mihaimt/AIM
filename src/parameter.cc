@@ -24,6 +24,7 @@ void Parameter::read ()
    read_constants (fin);
    read_initial_condition (fin);
    read_source (fin);
+   read_poiseuille (fin);
    read_output (fin);
 }
 
@@ -62,7 +63,6 @@ void Parameter::read_grid (Reader &fin)
       fin >> n_cell;
    
       assert(n_cell > 0);
-      fin.end_section ();
    }
    else
    {
@@ -70,6 +70,13 @@ void Parameter::read_grid (Reader &fin)
       cout << "   Allowed values: yes, no"<<endl;
       exit (0);
    }
+   fin.entry("probe");
+   fin >> probe_pos;
+   
+   assert(probe_pos >= xmin);
+   assert(probe_pos <= xmax);
+   
+   fin.end_section ();
    
 }
 
@@ -154,6 +161,9 @@ void Parameter::read_numeric (Reader &fin)
       cout << "   Error: unknown boundary type " << input << endl;
       exit (0);  
    }      
+   
+   fin.entry("cut_off_pre");
+   fin >> cut_off_pre;
 
    fin.end_section ();
 }
@@ -353,6 +363,28 @@ void Parameter::read_source (Reader &fin)
    fin.entry("energy_source");
    fin.getline (input);
    sources.add ("energy_source", input);
+   
+   fin.end_section ();
+}
+
+//------------------------------------------------------------------------------
+// Read sources
+//------------------------------------------------------------------------------
+void Parameter::read_poiseuille (Reader &fin)
+{
+   cout << "  Reading Poiseuille correction section\n";
+
+   string input;
+
+   fin.begin_section ("poiseuille");
+      
+   fin.entry("momentum_cor_coef");
+   fin.getline (input);
+   poiseuille_cor.add ("momentum_cor_coef", input);
+
+   fin.entry("energy_cor_coef");
+   fin.getline (input);
+   poiseuille_cor.add ("energy_cor_coef", input);
    
    fin.end_section ();
 }

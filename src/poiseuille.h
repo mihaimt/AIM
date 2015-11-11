@@ -1,5 +1,5 @@
-#ifndef __SOURCES_H__
-#define __SOURCES_H__
+#ifndef __POISEUILLE_H__
+#define __POISEUILLE_H__
 
 #include <iostream>
 #include <string>
@@ -8,29 +8,29 @@
 #include "ext_constants.h"
 
 //------------------------------------------------------------------------------
-// Class to store source functions
+// Class to store Poiseuille correction function
 //------------------------------------------------------------------------------
-class Sources
+class Poiseuille
 {
    public:
       void    add (std::string, std::string);
-      void value (const double& p, const double& t, std::vector<double>& source_val);
+      void value (const double& p, const double& t, const double& vel, const double& mu ,std::vector<double>& cor_val);
 
    private:
-      FParser mass_source;
-      FParser energy_source;
+      FParser momentum_cor_coef;
+      FParser energy_cor_coef;
 };
 
 //------------------------------------------------------------------------------
 // Add function as defined in "fun"
 //------------------------------------------------------------------------------
 inline
-void Sources::add (std::string variable, std::string fun)
+void Poiseuille::add (std::string variable, std::string fun)
 {
-   if(variable == "mass_source")
-      mass_source.FParse (fun);
-   else if(variable == "energy_source")
-      energy_source.FParse (fun);
+   if(variable == "momentum_cor_coef")
+      momentum_cor_coef.FParse (fun);
+   else if(variable == "energy_cor_coef")
+      energy_cor_coef.FParse (fun);
    else
    {
       std::cout << "Sources::add: Unknown variable " << variable << std::endl;
@@ -42,12 +42,12 @@ void Sources::add (std::string variable, std::string fun)
 // Evaluate source at a given point
 //------------------------------------------------------------------------------
 inline
-void Sources::value (const double& p, const double& t, std::vector<double>& source_val)
+void Poiseuille::value (const double& p, const double& t, const double& vel, const double& mu, std::vector<double>& cor_val)
 {
-   source_val.resize(2);
+   cor_val.resize(2);
    double vals[] = {p, t};
-   source_val[0]     = mass_source.Eval (vals);
-   source_val[1]     = energy_source.Eval (vals);
+   cor_val[0]     = momentum_cor_coef.Eval (vals)*vel*mu;
+   cor_val[1]     = energy_cor_coef.Eval (vals)*vel*vel*mu;
 
 }
 

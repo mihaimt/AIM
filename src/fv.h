@@ -9,6 +9,7 @@
 #include <fstream>
 #include "ext_constants.h"
 #include "parameter.h"
+extern std::map<std::string, double> constants;
 
 class FV
 {
@@ -57,7 +58,7 @@ class FV
       double temperature(const std::vector<double>& prim) const;
       double enthalpy(const std::vector<double>& prim) const;
       //double viscosity (const double T) const;
-      void poiseulle_cor();
+      void add_poiseuille_cor(const double time);
       void source_terms(const double time);
       void find_globals();
       void save_globals();
@@ -84,6 +85,7 @@ class FV
       unsigned int counter;
       
       double Cp;
+      unsigned int probe_cell;
       
 };
 

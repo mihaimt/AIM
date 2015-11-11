@@ -60,6 +60,11 @@ void FV::initialize ()
       }   
    }
    
+   // Find probe cell
+   for(unsigned int i = 0; i<n_face-1; ++i)
+      if(xf[i] <= param.probe_pos && xf[i+1] >= param.probe_pos)
+         probe_cell = i;
+   
    // Initial condition
 
    cout << "  Setting initial condition ...\n";
@@ -616,7 +621,8 @@ void FV::run ()
    double next_output_time = min(time_array[t_size-1] + param.output_dt,param.final_time);
    find_globals();
    unsigned int iter = 0;
-   while (time < param.final_time && iter < param.max_iter)
+   double pre_at_probe = primitive[ng_cell + probe_cell][2];
+   while (time < param.final_time && iter < param.max_iter && pre_at_probe < param.cut_off_pre)
    {
       conserved_old = conserved;
       compute_dt();
@@ -626,13 +632,14 @@ void FV::run ()
       {
          compute_face_derivatives ();
          compute_residual ();
-         poiseulle_cor(); 
+         add_poiseuille_cor(time); 
          source_terms(time);
          update_solution (rk);
          con_to_prim ();
       }
       time+= dt;
       ++iter;
+      pre_at_probe = primitive[ng_cell + probe_cell][2];
       compute_residual_norm();
       if(time == next_output_time)
       {
@@ -640,12 +647,17 @@ void FV::run ()
          cout << "Iter = " << iter << " Time = " << time << endl;
          cout << "Residual norm = ";
          cout << res_norm[0] << " " << res_norm[1] << " " << res_norm[2] << endl;
+         cout << "Pressure at probe: " << pre_at_probe <<" Pascal"<< endl;
          output ();
          find_globals();
          t_size = time_array.size();
          next_output_time = min(time_array[t_size-1] + param.output_dt,param.final_time);
       }
    }
+   if(pre_at_probe >= param.cut_off_pre)
+      cout<<"WARNING: EMERGENCY SHUT DOWN OF SYSTEM DUE TO PRESSURE BREACH"<<endl;
+   else
+      cout<<"No pressure breach was observed. Final pressure at probe was "<<pre_at_probe<<" Pascal"<<endl;   
    save_globals();
    
 
@@ -671,13 +683,17 @@ double FV::enthalpy(const vector<double>& prim) const
 // ------------------------------------------------------------------------------
 // Hagen-Poiseulle correction
 // ------------------------------------------------------------------------------
-void FV::poiseulle_cor()
+void FV::add_poiseuille_cor(const double time)
 {
    for(unsigned int i=0; i<n_cell; ++i)
    {
      double T = temperature(primitive[ng_cell +i]);
+     double vel = primitive[ng_cell +i][1];
      double mu  = param.viscosity (T);
-     residual[i][1] += dx[i] * 8*mu*M_PI*primitive[ng_cell +i][1];
+     vector <double> cor_val;
+     param.poiseuille_cor.value (xc[i],time,vel,mu,cor_val);
+     residual[i][1] -= dx[i] * cor_val[0];
+     residual[i][2] -= dx[i] * cor_val[1];
    }  
 }
 

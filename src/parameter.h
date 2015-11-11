@@ -9,6 +9,7 @@
 #include "ext_constants.h"
 #include "ic.h"
 #include "sources.h"
+#include "poiseuille.h"
 
 class Parameter
 {
@@ -46,7 +47,10 @@ class Parameter
       TimeIntegrationScheme time_scheme;
       InitialCondition initial_condition;
       Sources sources;
+      Poiseuille poiseuille_cor;
       std::string OUTPUT_PATH;
+      double probe_pos;
+      double cut_off_pre;
 
       double output_dt;
       void read ();
@@ -55,6 +59,7 @@ class Parameter
    private:
       void read_grid (Reader&);
       void read_source (Reader&);
+      void read_poiseuille (Reader&);
       void read_constants (Reader&);
       void read_numeric (Reader&);
       void read_material (Reader&);
