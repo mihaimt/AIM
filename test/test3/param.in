@@ -1,0 +1,77 @@
+grid
+{
+   read_from_file   no 
+   x_min            0
+   x_max            5.0
+   n_cell           500
+   probe            4.0
+}
+
+numeric
+{
+   time_scheme  ssprk3
+   cfl          0.5
+   max_iter     50000000
+   final_time   4e-2
+   min_residue  1.0e-6
+   reconstruct  first  
+   bc_type      wall
+   cut_off_pre  15e5
+   valves       right
+}
+
+material
+{
+   gamma       1.4
+   gas_const   287
+   viscosity
+   {
+      model    sutherland
+      mu_ref   1.716e-5
+      T_ref    273.15
+      T_0      110.4
+   }
+   prandtl     0.73
+   model       ns
+   flux        roe_fixed
+   atm_pre     1e5
+}
+
+constants
+{
+   den          6.1
+   pre          5e5
+   vel          0
+   arc_l        0.1
+   arc_mflux    1
+   arc_eflux    3e7
+   arc_pos      2
+   cross_area   3e-2
+}
+
+initial_condition
+{
+   read_from_file   no
+   density          den
+   velocity         vel   
+   pressure         pre
+}
+
+source
+{
+   mass_source     arc_mflux*((x>(arc_pos - 0.5*arc_l)) & (x<(arc_pos + 0.5*arc_l)))/(cross_area*arc_l)
+   energy_source   arc_eflux*((x>(arc_pos - 0.5*arc_l)) & (x<(arc_pos + 0.5*arc_l)))/(cross_area*arc_l)
+
+}
+
+poiseuille
+{
+   momentum_cor_coef     -8*pi/cross_area
+   energy_cor_coef       16*pi/(3*cross_area)
+}
+
+output
+{
+   output_dt    1e-5
+   output_path  ../test/test3
+}
