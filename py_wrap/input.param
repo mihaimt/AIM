@@ -1,13 +1,13 @@
 #!!! DO NOT USE TABS
 execute = no
-var_param = no
+var_param = yes
 
 solver_dir        = ../src
 solver_call       = aim_run -i param.in
-solver_input      = ../test/test2/param.in
+solver_input      = ../results/param.in
 
 #output_files
-output_path       = ../test/test2/
+output_path       = ../results/
 output_e          = glob.dat
 output_s_pref     = sol
 
@@ -16,4 +16,9 @@ velocity          = yes
 temperature       = yes
 pressure          = yes
 density           = yes
+
+
+#params var
+parameter_set_path = ./var_par/ 
+parameter_set  = par_to_change01.txt
 

@@ -3,7 +3,7 @@ grid
    read_from_file   no 
    x_min            0
    x_max            5.0
-   n_cell           500
+   n_cell           1000
    probe            4.0
 }
 
@@ -12,11 +12,11 @@ numeric
    time_scheme  ssprk3
    cfl          0.5
    max_iter     50000000
-   final_time   2e-1
+   final_time   2e-2
    min_residue  1.0e-6
    reconstruct  first  
    bc_type      wall
-   cut_off_pre  6e5
+   cut_off_pre  6e12
 }
 
 material
@@ -37,14 +37,14 @@ material
 
 constants
 {
-   den          5
+   den          6.1
    pre          5e5
    vel          0
    arc_l        0.1
    arc_mflux    1
    arc_eflux    3e7
    arc_pos      2
-   cross_area   1e-3
+   cross_area   0.03
 }
 
 initial_condition
@@ -57,8 +57,8 @@ initial_condition
 
 source
 {
-   mass_source     arc_mflux*((x>(arc_pos - 0.5*arc_l))/(cross_area*arc_l) & (x<(arc_pos + 0.5*arc_l)))
-   energy_source   arc_eflux*((x>(arc_pos - 0.5*arc_l))/(cross_area*arc_l) & (x<(arc_pos + 0.5*arc_l)))
+   mass_source     arc_mflux*((x>(arc_pos - 0.5*arc_l)) & (x<(arc_pos + 0.5*arc_l)))/(cross_area*arc_l)
+   energy_source   arc_eflux*((x>(arc_pos - 0.5*arc_l)) & (x<(arc_pos + 0.5*arc_l)))/(cross_area*arc_l)
 
 }
 
@@ -70,6 +70,6 @@ poiseuille
 
 output
 {
-   output_dt    1e-3
-   output_path  ../test/test2
+   output_dt    1e-5
+   output_path  .
 }

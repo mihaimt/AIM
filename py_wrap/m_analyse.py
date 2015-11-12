@@ -1,3 +1,6 @@
+
+##Author: Mihai Tomozeiu
+
 import os
 import numpy
 from sys import argv
@@ -47,24 +50,34 @@ def read(d):
 	return path, sizes, pos, den, vel, pre, tem
 
 
-def plott_one(arr, sizes, name, path):
+def plott_one(arr, sizes, name, path, timestep, cell_length):
+
+
+	di = {}
+	di['time'] = 'ms'
+	di['temperature'] = 'K'
+	di['pressure'] = 'Pa'
+	di['velocity'] = r'$\rm m \cdot s^{-1}$'
+	di['density'] = r'$\rm kg \cdot m^{-3}$'
 
 	prename = path+"/"+name
 	steps, size = sizes
 
 	fs = [10,10]
 	pyplot.figure(figsize = (fs[0],fs[1]))
-	pyplot.matshow(arr, extent=[0,size,0,steps], aspect='auto')
+	pyplot.imshow(arr, extent=[0,size*cell_length,0,steps*timestep*1000], aspect='auto', interpolation = 'none')
 	pyplot.hot()
-	pyplot.xlabel("position [c.u.]")
-	pyplot.ylabel("time [c.u.]")
+	pyplot.xlabel("position [m]", fontsize = 20)
+	pyplot.ylabel("time [ms]", fontsize = 20)
+	pyplot.tick_params(axis='both', which='major', labelsize=15)
+        pyplot.tick_params(axis='both', which='minor', labelsize=12)
 
 
 	cbar = pyplot.colorbar()
 
-	cbar.set_label(name+' [c.u.]', rotation=90)
+	cbar.set_label(name+' ['+di[name]+']', rotation=90, fontsize = 20)
 
-	pyplot.savefig(prename+"_mat.pdf")
+	pyplot.savefig(prename+"_no_interp.pdf")
 
 
 	pyplot.cla()
@@ -72,18 +85,18 @@ def plott_one(arr, sizes, name, path):
 
 	fs = [10,10]
 	pyplot.figure(figsize = (fs[0],fs[1]))
-	pyplot.imshow(arr, extent=[0,size,0,steps], aspect='auto')
+	pyplot.imshow(arr, extent=[0,size*cell_length,0,steps*timestep*1000], aspect='auto')
 	pyplot.hot()
 
-	pyplot.xlabel("position [c.u.]")
-	pyplot.ylabel("time [c.u.]")
+	pyplot.xlabel("position [m]", fontsize = 20)
+	pyplot.ylabel("time [ms]", fontsize = 20)
 
 	cbar = pyplot.colorbar()
-	cbar.set_label(name+' [c.u.]', rotation=90)
+	cbar.set_label(name+' ['+di[name]+']', rotation=90, fontsize = 20)
 
-	pyplot.savefig(prename+"_ims.pdf")
+	pyplot.savefig(prename+"_interp.pdf")
 
-
+          
 
 def remove_spaces(string):
 	ns = ''
@@ -108,11 +121,13 @@ def plott_all(d):
 	nd['velocity'] = reverse(vel)
 	nd['temperature'] = reverse(tem)
 
+	numpy.savez(path+"/data.npz", nd = nd, sizes = sizes)
+
 	for key in d:
 		if key in ['pressure', 'density', 'velocity', 'temperature']:
 			if remove_spaces(d[key]) == 'yes':
 				print key, 'done'
-				plott_one(nd[key], sizes, key, path) 
+				plott_one(nd[key], sizes, key, path, d['timestep'], d['cell_length'])
 
 	print "=Fin="
 

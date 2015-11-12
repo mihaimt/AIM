@@ -1,3 +1,7 @@
+
+#Author: Mihai Tomozeiu
+
+
 from matplotlib import pyplot
 import numpy
 import m_analyse
@@ -13,9 +17,10 @@ def plot_energy(d):
 		tdata = numpy.transpose(data)
 		time =  tdata[0]
 		energy = tdata[1]
+		#numpy.savez(path+"data_energy.npz", time = time, energy = energy)
 		pyplot.figure(figsize = (10,10))
-		pyplot.plot(time, energy/10**6, 'r.')
-		pyplot.xlabel("time [c.u.]", fontsize = 20)
+		pyplot.plot(time, energy/10**6*0.03, 'r.')
+		pyplot.xlabel("time [s]", fontsize = 20)
 		pyplot.ylabel("Energy in the system [MJ]", fontsize = 20)
 		pyplot.tick_params(axis='both', which='major', labelsize=15)
 		pyplot.tick_params(axis='both', which='minor', labelsize=12)

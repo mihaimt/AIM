@@ -1,7 +1,14 @@
+
+#Author: Mihai Tomozeiu#
+
+
 import os
 import numpy
 from sys import argv
 import re
+
+
+
 
 def execution(d):
 	cal    = d['solver_call']
